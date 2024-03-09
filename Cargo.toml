@@ -1,4 +1,4 @@
-workspace = { members = [ "api", "entity","service"] }
+workspace = { members = ["api", "entity", "service"] }
 
 [package]
 name = "solana-checker-token-ingestor"
@@ -15,3 +15,7 @@ spl-token = "4.0.0"
 serde = "1.0.197"
 serde_json = "1.0.114"
 dotenv = "0.15.0"
+reqwest = "0.11.25"
+tokio = { version = "1.36.0", features = ["full", "test-util"] }
+log = "0.4.21"
+env_logger = "0.11.3"

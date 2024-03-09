@@ -1,8 +1,10 @@
 use std::env;
+use std::error::Error;
 
 use dotenv::dotenv;
 use mpl_token_metadata::accounts::Metadata;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use solana_client::rpc_client::RpcClient;
 use solana_sdk::pubkey::Pubkey;
 use spl_token::state::{Account, GenericTokenAccount};
@@ -34,8 +36,51 @@ pub struct Holder {
     pub percentage: f64,
 }
 
+async fn fetch_price(token_address: &str) -> Result<f64, Box<dyn Error>> {
+    let client = reqwest::Client::new();
+
+    let url_with_params = client
+        .get("https://price.jup.ag/v4/price")
+        .query(&[("ids", token_address)])
+        .build()?
+        .url()
+        .clone();
+
+    println!("{}", url_with_params);
+
+
+    let res = client.get("https://price.jup.ag/v4/price")
+        .query(&[("ids", token_address)])
+        .send()
+        .await?
+        .text()
+        .await?;
+
+
+    println!("{}", res);
+
+
+    let res: Value = serde_json::from_str(&res).map_err(|e| format!("Failed to parse JSON: {}", e))?;
+
+    let price = res["data"][token_address]["price"]
+        .as_f64()
+        .ok_or_else(|| "Failed to parse the price".to_string())?;
+
+    Ok(price)
+}
+
+#[tokio::test]
+pub async fn fetch_price_test() {
+    let token_address = "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm";
+
+    match fetch_price(token_address).await {
+        Ok(result) => println!("{}", result),
+        Err(e) => eprintln!("Failed to fetch price: {}", e),
+    }
+}
+
 #[test]
-pub fn get_metadata() {
+pub fn fetch_metadata() {
     let client = get_rpc_client("MAINNET_PUBLIC_URL");
     let mint_address = "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm";
     let mint_pubkey = mint_address.parse::<Pubkey>().expect("Invalid mint address");
