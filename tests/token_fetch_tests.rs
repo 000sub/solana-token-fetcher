@@ -9,6 +9,8 @@ use solana_client::rpc_client::RpcClient;
 use solana_sdk::pubkey::Pubkey;
 use spl_token::state::{Account, GenericTokenAccount};
 
+static USDC_ADDRESS: &str = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
 fn get_rpc_client(url: &str) -> RpcClient {
     dotenv().ok();
     let rpc_url = env::var(url).ok().unwrap();
@@ -71,12 +73,9 @@ async fn fetch_price(token_address: &str) -> Result<f64, Box<dyn Error>> {
 
 #[tokio::test]
 pub async fn fetch_price_test() {
-    let token_address = "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm";
+    let result = fetch_price(USDC_ADDRESS).await.expect("Failed to fetch price");
 
-    match fetch_price(token_address).await {
-        Ok(result) => println!("{}", result),
-        Err(e) => eprintln!("Failed to fetch price: {}", e),
-    }
+    assert_eq!(result, 1.0);
 }
 
 #[test]
