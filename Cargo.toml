@@ -1,4 +1,4 @@
-workspace = { members = ["api", "entity", "service"] }
+workspace = { members = [".", "api", "entity", "service"] }
 
 [package]
 name = "solana-checker-token-ingestor"
