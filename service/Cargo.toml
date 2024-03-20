@@ -6,6 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+utils = { path = "../utils" }
 reqwest = "0.11.25"
 serde_json = "1.0.114"
 tokio = { version = "1.36.0", features = ["full", "test-util"] }
+mpl-token-metadata = "4.1.2"
+solana-client = "1.18.7"
+solana-sdk = "1.18.7"
+spl-token = "4.0.0"
+serde = "1.0.197"
