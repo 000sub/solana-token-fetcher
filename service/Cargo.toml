@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+entity = { path = "../entity" }
 utils = { path = "../utils" }
 reqwest = "0.11.25"
 serde_json = "1.0.114"
@@ -14,4 +15,5 @@ mpl-token-metadata = "4.1.2"
 solana-client = "1.18.7"
 solana-sdk = "1.18.7"
 spl-token = "4.0.0"
+spl-token-2022 = "2.0.2"
 serde = "1.0.197"
