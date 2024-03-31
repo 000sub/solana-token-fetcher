@@ -22,14 +22,14 @@ impl Fetcher {
         Self::parse_price_response(address, &response_text)
     }
 
-    pub async fn fetch_token_metadata(mint_address: &str) -> TokenMetadata {
+    pub async fn fetch_token_metadata(mint_address: &str) -> Result<TokenMetadata, Box<dyn Error>> {
         let client = RpcUtils::get_rpc_client("MAINNET_PUBLIC_URL");
-        let mint_pubkey = mint_address.parse::<Pubkey>().expect("Invalid mint address");
+        let mint_pubkey = mint_address.parse::<Pubkey>()?;
         let metadata_pda = Metadata::find_pda(&mint_pubkey).0;
-        let account_data = client.get_account_data(&metadata_pda).expect("Failed to get account data");
-        let metadata = Metadata::safe_deserialize(&mut account_data.as_slice()).expect("Failed to deserialize metadata");
+        let account_data = client.get_account_data(&metadata_pda)?;
+        let metadata = Metadata::safe_deserialize(&mut account_data.as_slice())?;
 
-        TokenMetadata {
+        Ok(TokenMetadata {
             update_authority: metadata.update_authority.to_string(),
             mint: metadata.mint.to_string(),
             name: metadata.name.trim_matches('\u{0000}').parse().unwrap(),
@@ -37,19 +37,19 @@ impl Fetcher {
             uri: metadata.uri.trim_matches('\u{0000}').parse().unwrap(),
             seller_fee_basis_points: metadata.seller_fee_basis_points,
             is_mutable: metadata.is_mutable,
-        }
+        })
     }
 
-    pub async fn fetch_top_holders(mint_address: &str, paging_num: usize) -> Vec<Holder> {
+    pub async fn fetch_top_holders(mint_address: &str, paging_num: usize) -> Result<Vec<Holder>, Box<dyn Error>> {
         let client = RpcUtils::get_rpc_client("MAINNET_PRIVATE_URL");
-        let mint_pubkey = mint_address.parse::<Pubkey>().expect("Invalid mint address");
+        let mint_pubkey = mint_address.parse::<Pubkey>()?;
         let total_supply = client.get_token_supply(&mint_pubkey).unwrap().ui_amount.unwrap();
         let accounts = client.get_token_largest_accounts(&mint_pubkey).unwrap();
 
         let mut holders = Vec::<Holder>::new();
 
         for address in accounts.iter().take(paging_num) {
-            let token_account_pubkey = address.address.parse::<Pubkey>().expect("Invalid mint address");
+            let token_account_pubkey = address.address.parse::<Pubkey>()?;
             let account_data = client.get_account_data(&token_account_pubkey).unwrap();
             let owner_address = Account::unpack_account_owner(&account_data).unwrap();
             let ratio = address.amount.ui_amount.unwrap() / total_supply * 100.0;
@@ -67,12 +67,12 @@ impl Fetcher {
             holders.push(holder);
         }
 
-        holders
+        Ok(holders)
     }
 
-    pub async fn fetch_token_extension_info(mint_address: &str) -> Vec<String> {
+    pub async fn fetch_token_extension_info(mint_address: &str) -> Result<Vec<String>, Box<dyn Error>> {
         let client = RpcUtils::get_rpc_client("MAINNET_PRIVATE_URL");
-        let mint_pubkey = mint_address.parse::<Pubkey>().expect("Invalid mint address");
+        let mint_pubkey = mint_address.parse::<Pubkey>()?;
         let account_data = client.get_account_data(&mint_pubkey).unwrap();
         let result = StateWithExtensionsOwned::<Mint>::unpack(account_data).unwrap().get_extension_types().unwrap();
 
@@ -82,22 +82,22 @@ impl Fetcher {
             extensions.push(format!("{:?}", extension));
         }
 
-        extensions
+        Ok(extensions)
     }
 
-    pub async fn fetch_token_info(mint_address: &str) -> TokenInfo {
+    pub async fn fetch_token_info(mint_address: &str) -> Result<TokenInfo, Box<dyn Error>> {
         let client = RpcUtils::get_rpc_client("MAINNET_PRIVATE_URL");
-        let mint_pubkey = mint_address.parse::<Pubkey>().expect("Invalid mint address");
+        let mint_pubkey = mint_address.parse::<Pubkey>()?;
         let account_data = client.get_account_data(&mint_pubkey).unwrap();
         let mint = Mint::unpack(&account_data).unwrap();
 
-        TokenInfo {
+        Ok(TokenInfo {
             mint_authority: mint.mint_authority.map_or("null".to_string(), |s| s.to_string()),
             supply: mint.supply,
             decimals: mint.decimals,
             is_initialized: mint.is_initialized,
             freeze_authority: mint.freeze_authority.map_or("null".to_string(), |s| s.to_string()),
-        }
+        })
     }
 
     async fn send_price_request(address: &str) -> Result<String, Box<dyn Error>> {
