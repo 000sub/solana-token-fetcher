@@ -1,10 +1,13 @@
 use std::env;
 
+use axum::{Json, Router};
 use axum::extract::Path;
-use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Router;
 use axum::routing::get;
+
+use service::Fetcher;
+
+use crate::response::TokenResponse;
 
 mod response;
 
@@ -28,10 +31,21 @@ async fn start() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn find_token(
-    Path(address): Path<String>
-) -> impl IntoResponse {
-    (StatusCode::OK, format!("Token Address: {}", address))
+async fn find_token(Path(address): Path<String>) -> impl IntoResponse {
+    let metadata = Fetcher::fetch_token_metadata(address.as_str()).await.unwrap();
+    let top_holders = Fetcher::fetch_top_holders(address.as_str(), 10).await.unwrap();
+    let info = Fetcher::fetch_token_info(address.as_str()).await.unwrap();
+    let extensions = Fetcher::fetch_token_extension_info(address.as_str()).await.unwrap();
+
+    let response = TokenResponse {
+        mint: address,
+        metadata,
+        extensions,
+        info,
+        top_holders,
+    };
+
+    Json(response)
 }
 
 pub fn main() {
