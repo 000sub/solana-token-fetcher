@@ -23,7 +23,7 @@ impl Fetcher {
     }
 
     pub async fn fetch_token_metadata(mint_address: &str) -> Result<TokenMetadata, Box<dyn Error>> {
-        let client = RpcUtils::get_rpc_client("MAINNET_PUBLIC_URL");
+        let client = RpcUtils::get_rpc_client("MAINNET_PRIVATE_URL");
         let mint_pubkey = mint_address.parse::<Pubkey>()?;
         let metadata_pda = Metadata::find_pda(&mint_pubkey).0;
         let account_data = client.get_account_data(&metadata_pda)?;
@@ -71,7 +71,7 @@ impl Fetcher {
     }
 
     pub async fn fetch_token_extension_info(mint_address: &str) -> Result<Vec<String>, Box<dyn Error>> {
-        let client = RpcUtils::get_rpc_client("MAINNET_PUBLIC_URL");
+        let client = RpcUtils::get_rpc_client("MAINNET_PRIVATE_URL");
         let mint_pubkey = mint_address.parse::<Pubkey>()?;
         let account_data = client.get_account_data(&mint_pubkey).unwrap();
         let result = StateWithExtensionsOwned::<Mint>::unpack(account_data).unwrap().get_extension_types().unwrap();
@@ -86,7 +86,7 @@ impl Fetcher {
     }
 
     pub async fn fetch_token_info(mint_address: &str) -> Result<TokenInfo, Box<dyn Error>> {
-        let client = RpcUtils::get_rpc_client("MAINNET_PUBLIC_URL");
+        let client = RpcUtils::get_rpc_client("MAINNET_PRIVATE_URL");
         let mint_pubkey = mint_address.parse::<Pubkey>()?;
         let account_data = client.get_account_data(&mint_pubkey).unwrap();
         let mint = Mint::unpack(&account_data).unwrap();

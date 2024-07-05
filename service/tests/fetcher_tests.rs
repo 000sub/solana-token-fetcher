@@ -34,7 +34,7 @@ pub async fn fetch_top_holders_test() {
 #[tokio::test(flavor = "multi_thread")]
 pub async fn fetch_top_holders_test_fail() {
     match Fetcher::fetch_top_holders("invalid_address", 5).await {
-        Ok(result) => {
+        Ok(_result) => {
             panic!("test failed");
         }
         Err(e) => {

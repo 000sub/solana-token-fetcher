@@ -99,7 +99,7 @@ pub async fn fetch_price_test() {
 
 #[test]
 pub fn fetch_metadata() {
-    let client = get_rpc_client("MAINNET_PUBLIC_URL");
+    let client = get_rpc_client("MAINNET_PRIVATE_URL");
     let mint_address = "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm";
     let mint_pubkey = mint_address.parse::<Pubkey>().expect("Invalid mint address");
     let metadata_pda = Metadata::find_pda(&mint_pubkey).0;
