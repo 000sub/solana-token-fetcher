@@ -1,7 +1,7 @@
 workspace = { members = [".", "api", "entity", "service", "utils"] }
 
 [package]
-name = "solana-checker-token-ingestor"
+name = "solana-token-fetcher"
 version = "0.1.0"
 edition = "2021"
 

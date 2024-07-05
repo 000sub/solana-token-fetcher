@@ -3516,26 +3516,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-checker-token-ingestor"
-version = "0.1.0"
-dependencies = [
- "api",
- "dotenv",
- "env_logger 0.11.3",
- "futures",
- "log",
- "mpl-token-metadata",
- "reqwest",
- "serde",
- "serde_json",
- "solana-client",
- "solana-sdk",
- "spl-token",
- "spl-token-2022 2.0.2",
- "tokio",
-]
-
-[[package]]
 name = "solana-clap-utils"
 version = "1.18.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4089,6 +4069,26 @@ dependencies = [
  "solana-rpc-client",
  "solana-rpc-client-api",
  "solana-sdk",
+]
+
+[[package]]
+name = "solana-token-fetcher"
+version = "0.1.0"
+dependencies = [
+ "api",
+ "dotenv",
+ "env_logger 0.11.3",
+ "futures",
+ "log",
+ "mpl-token-metadata",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "solana-client",
+ "solana-sdk",
+ "spl-token",
+ "spl-token-2022 2.0.2",
+ "tokio",
 ]
 
 [[package]]

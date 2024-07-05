@@ -1,4 +1,4 @@
-# solana-checker-token-ingestor
+# solana-token-fetcher
 
 ### Delivers Brief Summary of Solana Mainnet Tokens
 
