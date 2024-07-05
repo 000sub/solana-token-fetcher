@@ -18,7 +18,7 @@
 
 # How to Setup
 
-To ensure proper functionality, you need to enter your private RPC URI in `.env` file at root directory. You can get a free RPC URI for Solana mainnet from [helius](dev.helius.xyz).
+To ensure proper functionality, you need to enter your private RPC URI in `.env` file at root directory. You can get a free RPC URI for Solana mainnet from [helius](https://dev.helius.xyz).
 
 
 <hr/>
