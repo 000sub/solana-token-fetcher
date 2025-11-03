@@ -146,3 +146,4 @@ http://localhost:3000/EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm
 }
 ```
 
+"### Note from contributor\nImproved documentation for new contributors." 
